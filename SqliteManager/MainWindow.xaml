@@ -1,0 +1,70 @@
+﻿<Window x:Class="SqliteManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SqliteManager" xmlns:system="clr-namespace:System;assembly=netstandard"
+        mc:Ignorable="d"
+        Title="DB Manager" Height="450" Width="800">
+    <DockPanel>
+        <!-- Barre de menu -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Fichier">
+                <MenuItem Header="Nouveau" Click="NewFile_Click"/>
+                <MenuItem Header="Ouvrir" Click="OpenFile_Click"/>
+                <MenuItem Header="Enregister" Click="SaveFile_Click"/>
+                <MenuItem Header="Enregistrer sous" Click="SaveFileAs_Click"/>
+                <Separator DockPanel.Dock="Bottom"/>
+                <MenuItem Header="Quitter" Click="CloseApp_Click"/>
+            </MenuItem>
+            <MenuItem Header="Éditer">
+                <MenuItem Header="Ajouter une Table"/>
+                <MenuItem Header="Supprimer une Table"/>
+            </MenuItem>
+            <MenuItem Header="Affichage">
+                <MenuItem Header="MainWindow"/>
+            </MenuItem>
+            <MenuItem Header="Aide">
+                <MenuItem Header="À propos"/>
+            </MenuItem>
+        </Menu>
+
+        
+
+        <Grid>
+            <ListBox x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,5" />
+
+                            <!-- Liste des colonnes de la table -->
+                            <ListBox ItemsSource="{Binding Columns}" Padding="3">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0">
+                                            <!-- Champ modifiable pour le nom de la colonne -->
+                                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="0,0,0,0"/>
+
+                                            <!-- Champ modifiable pour le type de données -->
+                                            <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="150" Foreground="Gray">
+                                                <ComboBox.ItemsSource>
+                                                    <x:Array Type="{x:Type system:String}">
+                                                        <system:String>INTEGER</system:String>
+                                                        <system:String>TEXT</system:String>
+                                                        <system:String>REAL</system:String>
+                                                        <system:String>BLOB</system:String>
+                                                    </x:Array>
+                                                </ComboBox.ItemsSource>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </DockPanel>
+</Window>
