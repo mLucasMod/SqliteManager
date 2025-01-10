@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,9 +76,39 @@ namespace SqliteManager
             MessageBox.Show("Save As");
         }
 
+        private void DeleteFile_Click(Object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Delete Database");
+        }
+
         private void CloseApp_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+
+
+        private void DeleteColumn_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is Column column)
+            {
+                // Récupérer la table à laquelle appartient cette colonne
+                var table = TablesListBox.ItemsSource
+                    .OfType<Table>()
+                    .FirstOrDefault(t => t.Columns.Contains(column));
+
+                if (table != null)
+                {
+                    // Supprimer la colonne de la liste
+                    table.Columns.Remove(column);
+
+                    // Met à jour la base de données (SQLite ne supporte pas bien la suppression directe de colonne)
+                    db.DropTable(table.Name); // Supprime la table
+                    db.CreateTable(table.Name, table.Columns); // La recrée sans la colonne supprimée
+
+                    RefreshTables(); // Rafraîchir l'affichage
+                }
+            }
         }
     }
 }

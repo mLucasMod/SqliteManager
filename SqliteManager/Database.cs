@@ -10,7 +10,7 @@ namespace SqliteManager
 {
     class Database
     {
-        private Dictionary<string, Table> Tables { get; set; }
+        public Dictionary<string, Table> Tables { get; set; }
         private SqliteConnection connection;
 
         public Database(string filepath)
@@ -97,7 +97,5 @@ namespace SqliteManager
 
             return true;
         }
-
-
     }
 }

@@ -11,7 +11,7 @@ using (var connection = new SqliteConnection(connectionString))
 
     // Créer la table Test
     string createTableQuery = @"
-    CREATE TABLE IF NOT EXISTS Test (
+    CREATE TABLE IF NOT EXISTS Test2 (
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
         Nom TEXT NOT NULL,
         Age INTEGER
@@ -23,7 +23,7 @@ using (var connection = new SqliteConnection(connectionString))
 
     // Insérer des valeurs de test
     string insertDataQuery = @"
-    INSERT INTO Test (Nom, Age) VALUES 
+    INSERT INTO Test2 (Nom, Age) VALUES 
     ('Alice', 30),
     ('Bob', 25),
     ('Charlie', 35);";

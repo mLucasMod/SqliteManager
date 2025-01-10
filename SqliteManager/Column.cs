@@ -17,11 +17,8 @@ namespace SqliteManager
             get => _name;
             set
             {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
+                _name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
 
@@ -30,11 +27,8 @@ namespace SqliteManager
             get => _type;
             set
             {
-                if (_type != value)
-                {
-                    _type = value;
-                    OnPropertyChanged(nameof(Type));
-                }
+                _type = value;
+                OnPropertyChanged(nameof(Type));
             }
         }
 
