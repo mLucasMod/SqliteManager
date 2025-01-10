@@ -14,7 +14,7 @@
                 <MenuItem Header="Ouvrir un schéma" Click="OpenFile_Click" FontWeight="Normal"/>
                 <MenuItem Header="Enregister le schéma" Click="SaveFile_Click" FontWeight="Normal"/>
                 <MenuItem Header="Enregistrer sous" Click="SaveFileAs_Click" FontWeight="Normal"/>
-                <MenuItem Header="Supprimer la base de donnée" FontWeight="Normal"/>
+                <MenuItem Header="Supprimer la base de donnée" Click="delete_DB" FontWeight="Normal"/>
                 <Separator DockPanel.Dock="Bottom"/>
                 <MenuItem Header="Quitter" Click="CloseApp_Click" FontWeight="Normal"/>
             </MenuItem>
