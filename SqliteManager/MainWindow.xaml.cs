@@ -37,7 +37,16 @@ namespace SqliteManager
 
         private void NewFile_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("New");
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "SQLite Database (*.db)|*.db",
+                Title = "Créer un nouveau fichier .db"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                db = new Database(saveFileDialog.FileName);
+            }
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
