@@ -9,51 +9,56 @@
     <DockPanel>
         <!-- Barre de menu -->
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Fichier">
-                <MenuItem Header="Nouveau" Click="NewFile_Click"/>
-                <MenuItem Header="Ouvrir" Click="OpenFile_Click"/>
-                <MenuItem Header="Enregister" Click="SaveFile_Click"/>
-                <MenuItem Header="Enregistrer sous" Click="SaveFileAs_Click"/>
+            <MenuItem Header="Fichier" Padding="6" FontSize="12" FontWeight="Bold">
+                <MenuItem Header="Nouveau schéma" Click="NewFile_Click" FontWeight="Normal"/>
+                <MenuItem Header="Ouvrir un schéma" Click="OpenFile_Click" FontWeight="Normal"/>
+                <MenuItem Header="Enregister le schéma" Click="SaveFile_Click" FontWeight="Normal"/>
+                <MenuItem Header="Enregistrer sous" Click="SaveFileAs_Click" FontWeight="Normal"/>
+                <MenuItem Header="Supprimer la base de donnée" FontWeight="Normal"/>
                 <Separator DockPanel.Dock="Bottom"/>
-                <MenuItem Header="Quitter" Click="CloseApp_Click"/>
+                <MenuItem Header="Quitter" Click="CloseApp_Click" FontWeight="Normal"/>
             </MenuItem>
-            <MenuItem Header="Éditer">
-                <MenuItem Header="Ajouter une Table"/>
-                <MenuItem Header="Supprimer une Table"/>
-                <MenuItem Header="Supprimer la base de donnée"/>
+            <MenuItem Header="Éditer" Padding="6" FontSize="12" FontWeight="Bold">
+                <MenuItem Header="Ajouter une Table" FontWeight="Normal"/>
             </MenuItem>
-            <MenuItem Header="Affichage">
-                <MenuItem Header="MainWindow"/>
+            <MenuItem Header="Affichage" Padding="6" FontSize="12" FontWeight="Bold">
+                <MenuItem Header="MainWindow" FontWeight="Normal"/>
+                <MenuItem Header="Ouvrir WorkBench" FontWeight="Normal"/>
             </MenuItem>
-            <MenuItem Header="Aide">
-                <MenuItem Header="À propos"/>
+            <MenuItem Header="Aide" Padding="6" FontSize="12" FontWeight="Bold">
+                <MenuItem Header="À propos" FontWeight="Normal"/>
             </MenuItem>
         </Menu>
 
 
 
         <Grid>
-            <ListBox x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
-                <ListBox.ItemTemplate>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <ItemsControl x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,5" FontSize="22"/>
-                                <Button Content="Ajouter un champ" Height="20" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="12"/>
-                                <Button Content="Renommer" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12"/>
-                                <Button Content="Supprimer la table" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12"/>
+                                <Button Content="Ajouter un champ" Height="20" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                                <Button Content="Renommer" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                                <Button Content="Supprimer la table" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
                             </StackPanel>
 
                             <!-- Liste des colonnes de la table -->
-                            <ListBox ItemsSource="{Binding Columns}" Padding="3">
-                                <ListBox.ItemTemplate>
+                            <ItemsControl ItemsSource="{Binding Columns}" Padding="3">
+                                <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="0,0">
                                             <!-- Champ modifiable pour le nom de la colonne -->
                                             <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
 
                                             <!-- Champ modifiable pour le type de données -->
-                                            <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="150" Foreground="LightBlue">
+                                            <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="150">
                                                 <ComboBox.ItemsSource>
                                                     <x:Array Type="{x:Type system:String}">
                                                         <system:String>INTEGER</system:String>
@@ -63,15 +68,16 @@
                                                     </x:Array>
                                                 </ComboBox.ItemsSource>
                                             </ComboBox>
-                                            <Button Content="Renommer le champ" Height="20" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="12"/>
+                                            <Button Content="Supprimer le champ" Height="18" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="10"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Separator Margin="5,10,5,10"/>
                         </StackPanel>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </DockPanel>
 </Window>
