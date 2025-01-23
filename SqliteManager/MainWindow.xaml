@@ -38,7 +38,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Label x:Name="FileName" Width="200" Margin="10" HorizontalAlignment="Right"/>
+                <Label x:Name="FileName" Width="200" Margin="10" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
 
                 <ItemsControl x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
                     <ItemsControl.ItemTemplate>

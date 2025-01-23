@@ -77,8 +77,6 @@ namespace SqliteManager
             command.CommandText = $"CREATE TABLE IF NOT EXISTS {tableName} ({string.Join(", ", columns.Select(c => $"{c.Name} {c.Type}"))})";
             command.ExecuteNonQuery();
 
-            Tables.Add(tableName, new Table(tableName, columns));
-
             return true;
         }
 
@@ -111,8 +109,6 @@ namespace SqliteManager
             command.CommandText = $"DROP TABLE {tableName}";
             command.ExecuteNonQuery();
 
-            Tables.Remove(tableName);
-
             return true;
         }
 
@@ -129,8 +125,6 @@ namespace SqliteManager
             command.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {columnType}";
             command.ExecuteNonQuery();
 
-            Tables[tableName].Columns.Add(new Column(tableName ,columnName, columnType));
-
             return true;
         }
 
@@ -146,8 +140,6 @@ namespace SqliteManager
             var command = connection.CreateCommand();
             command.CommandText = $"ALTER TABLE {tableName} RENAME COLUMN {columnName} TO {newColumnName}";
             command.ExecuteNonQuery();
-
-            Refresh();
 
             return true;
         }
@@ -168,8 +160,6 @@ namespace SqliteManager
             var command = connection.CreateCommand();
             command.CommandText = $"ALTER TABLE {tableName} DROP COLUMN {columnName}";
             command.ExecuteNonQuery();
-
-            Refresh();
 
             return true;
         }

@@ -10,7 +10,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+//using System.Windows.Shapes;
+using System.IO;
+
 
 namespace SqliteManager
 {
@@ -51,6 +53,7 @@ namespace SqliteManager
             if (saveFileDialog.ShowDialog() == true)
             {
                 db = new Database(saveFileDialog.FileName);
+                FileName.Content = Path.GetFileName(saveFileDialog.FileName);
             }
         }
 
@@ -65,7 +68,7 @@ namespace SqliteManager
             if (openFileDialog.ShowDialog() == true)
             {
                 db = new Database(openFileDialog.FileName);
-                FileName.Content = openFileDialog.FileName;
+                FileName.Content = Path.GetFileName(openFileDialog.FileName);
                 RefreshTables();
             }
         }
