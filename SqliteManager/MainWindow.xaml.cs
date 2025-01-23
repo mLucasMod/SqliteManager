@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
@@ -33,7 +34,10 @@ namespace SqliteManager
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Refresh");
+            if (db != null)
+            {
+                RefreshTables();
+            }
         }
 
         private void NewFile_Click(object sender, RoutedEventArgs e)
@@ -61,9 +65,9 @@ namespace SqliteManager
             if (openFileDialog.ShowDialog() == true)
             {
                 db = new Database(openFileDialog.FileName);
+                FileName.Content = openFileDialog.FileName;
+                RefreshTables();
             }
-
-            RefreshTables();
         }
 
         private void SaveFile_Click(object sender, RoutedEventArgs e)
@@ -87,28 +91,82 @@ namespace SqliteManager
         }
 
 
+        private void AddTable_Click(object sender, RoutedEventArgs e)
+        {
+            var inputWindow = new InputWindow();
+
+            if (inputWindow.ShowDialog() == true)
+            {
+                db.CreateTable(inputWindow.UserInput, new List<Column>());
+            }
+
+            RefreshTables();
+        }
+
+        private void RenameTable_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Table table)
+            {
+                var inputWindow = new InputWindow();
+
+                if (inputWindow.ShowDialog() == true)
+                {
+                    db.RenameTable(table.Name, inputWindow.UserInput);
+                }
+            }
+
+            RefreshTables();
+        }
+
+        private void DeleteTable_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Table table)
+            {
+                db.DropTable(table.Name);
+            }
+
+            RefreshTables();
+        }
+
+
+        private void AddColumn_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Table table)
+            {
+                var inputWindow = new InputWindow();
+
+                if (inputWindow.ShowDialog() == true)
+                {
+                    db.AddColumn(table.Name, inputWindow.UserInput, Column.DataType.TEXT);
+                }
+            }
+
+            RefreshTables();
+        }
+
+        private void RenameColumn_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Column column)
+            {
+                var inputWindow = new InputWindow();
+
+                if (inputWindow.ShowDialog() == true)
+                {
+                    db.AddColumn(column.TableName, inputWindow.UserInput, Column.DataType.TEXT);
+                }
+            }
+
+            RefreshTables();
+        }
 
         private void DeleteColumn_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is Column column)
+            if ((sender as Button)?.DataContext is Column column)
             {
-                // Récupérer la table à laquelle appartient cette colonne
-                var table = TablesListBox.ItemsSource
-                    .OfType<Table>()
-                    .FirstOrDefault(t => t.Columns.Contains(column));
-
-                if (table != null)
-                {
-                    // Supprimer la colonne de la liste
-                    table.Columns.Remove(column);
-
-                    // Met à jour la base de données (SQLite ne supporte pas bien la suppression directe de colonne)
-                    db.DropTable(table.Name); // Supprime la table
-                    db.CreateTable(table.Name, table.Columns); // La recrée sans la colonne supprimée
-
-                    RefreshTables(); // Rafraîchir l'affichage
-                }
+                db.DeleteColumn(column.TableName, column.Name);
             }
+
+            RefreshTables();
         }
     }
 }

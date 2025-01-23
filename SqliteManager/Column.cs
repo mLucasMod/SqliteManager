@@ -12,6 +12,8 @@ namespace SqliteManager
         private string _name;
         private DataType _type;
 
+        public string TableName { get; set; }
+
         public string Name
         {
             get => _name;
@@ -41,8 +43,9 @@ namespace SqliteManager
             NULL       // Valeur nulle
         }
 
-        public Column(string name, DataType type)
+        public Column(string tableName, string name, DataType type)
         {
+            TableName = tableName;
             Name = name;
             Type = type;
         }

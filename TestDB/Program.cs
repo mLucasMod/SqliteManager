@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "test2.db");
+string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "test.db");
 string connectionString = $"Data Source={dbPath}";
 
 Console.WriteLine($"Chemin de la base de données : {dbPath}");
@@ -33,14 +33,14 @@ using (var connection = new SqliteConnection(connectionString))
     }
 
     // Lire et afficher les données
-    string selectQuery = "SELECT * FROM Test";
-    using (var selectCommand = new SqliteCommand(selectQuery, connection))
-    using (var reader = selectCommand.ExecuteReader())
-    {
-        Console.WriteLine("Données insérées :");
-        while (reader.Read())
-        {
-            Console.WriteLine($"ID: {reader["Id"]}, Nom: {reader["Nom"]}, Age: {reader["Age"]}");
-        }
-    }
+    //string selectQuery = "SELECT * FROM Test";
+    //using (var selectCommand = new SqliteCommand(selectQuery, connection))
+    //using (var reader = selectCommand.ExecuteReader())
+    //{
+    //    Console.WriteLine("Données insérées :");
+    //    while (reader.Read())
+    //    {
+    //        Console.WriteLine($"ID: {reader["Id"]}, Nom: {reader["Nom"]}, Age: {reader["Age"]}");
+    //    }
+    //}
 }

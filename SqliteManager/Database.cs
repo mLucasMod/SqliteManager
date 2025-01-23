@@ -46,7 +46,7 @@ namespace SqliteManager
                         {
                             string name = columnsReader.GetString(1);
                             var type = (Column.DataType)Enum.Parse(typeof(Column.DataType), columnsReader.GetString(2), true);
-                            columns.Add(new Column(name, type));
+                            columns.Add(new Column(tableName, name, type));
                         }
                     }
 
@@ -62,38 +62,114 @@ namespace SqliteManager
             return Tables.Values.ToList();
         }
 
-        public bool CreateTable(string name, List<Column> columns)
+        public bool CreateTable(string tableName, List<Column> columns)
         {
             Refresh();
 
-            if (Tables.ContainsKey(name))
+            if (Tables.ContainsKey(tableName))
             {
                 return false;
             }
 
+            columns.Add(new Column(tableName, "id", Column.DataType.INTEGER));
+
             var command = connection.CreateCommand();
-            command.CommandText = $"CREATE TABLE IF NOT EXISTS {name} ({string.Join(", ", columns.Select(c => $"{c.Name} {c.Type}"))})";
+            command.CommandText = $"CREATE TABLE IF NOT EXISTS {tableName} ({string.Join(", ", columns.Select(c => $"{c.Name} {c.Type}"))})";
             command.ExecuteNonQuery();
 
-            Tables.Add(name, new Table(name, columns));
+            Tables.Add(tableName, new Table(tableName, columns));
 
             return true;
         }
 
-        public bool DropTable(string name)
+        public bool RenameTable(string tableName, string newTableName)
         {
             Refresh();
 
-            if (!Tables.ContainsKey(name))
+            if (!Tables.ContainsKey(tableName))
             {
                 return false;
             }
 
             var command = connection.CreateCommand();
-            command.CommandText = $"DROP TABLE {name}";
+            command.CommandText = $"ALTER TABLE {tableName} RENAME TO {newTableName}";
             command.ExecuteNonQuery();
 
-            Tables.Remove(name);
+            return true;
+        }
+
+        public bool DropTable(string tableName)
+        {
+            Refresh();
+
+            if (!Tables.ContainsKey(tableName))
+            {
+                return false;
+            }
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"DROP TABLE {tableName}";
+            command.ExecuteNonQuery();
+
+            Tables.Remove(tableName);
+
+            return true;
+        }
+
+        public bool AddColumn(string tableName, string columnName, Column.DataType columnType)
+        {
+            Refresh();
+
+            if (!Tables.ContainsKey(tableName))
+            {
+                return false;
+            }
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {columnType}";
+            command.ExecuteNonQuery();
+
+            Tables[tableName].Columns.Add(new Column(tableName ,columnName, columnType));
+
+            return true;
+        }
+
+        public bool RenameColumn(string tableName, string columnName, string newColumnName)
+        {
+            Refresh();
+
+            if (!Tables.ContainsKey(tableName))
+            {
+                return false;
+            }
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"ALTER TABLE {tableName} RENAME COLUMN {columnName} TO {newColumnName}";
+            command.ExecuteNonQuery();
+
+            Refresh();
+
+            return true;
+        }
+
+        public bool DeleteColumn(string tableName, string columnName)
+        {
+            Refresh();
+
+            if (!Tables.ContainsKey(tableName))
+            {
+                return false;
+            }
+            else if (Tables[tableName].Columns.Count == 1)
+            {
+                return false;
+            }
+
+            var command = connection.CreateCommand();
+            command.CommandText = $"ALTER TABLE {tableName} DROP COLUMN {columnName}";
+            command.ExecuteNonQuery();
+
+            Refresh();
 
             return true;
         }

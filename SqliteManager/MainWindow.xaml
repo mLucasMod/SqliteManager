@@ -19,7 +19,7 @@
                 <MenuItem Header="Quitter" Click="CloseApp_Click" FontWeight="Normal"/>
             </MenuItem>
             <MenuItem Header="Éditer" Padding="6" FontSize="12" FontWeight="Bold">
-                <MenuItem Header="Ajouter une Table" FontWeight="Normal"/>
+                <MenuItem Header="Ajouter une Table" FontWeight="Normal" Click="AddTable_Click"/>
             </MenuItem>
             <MenuItem Header="Affichage" Padding="6" FontSize="12" FontWeight="Bold">
                 <MenuItem Header="MainWindow" FontWeight="Normal"/>
@@ -31,53 +31,56 @@
         </Menu>
 
 
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
+                <Label x:Name="FileName" Width="200" Margin="10" HorizontalAlignment="Right"/>
 
-            <ItemsControl x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,5" FontSize="22"/>
-                                <Button Content="Ajouter un champ" Height="20" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
-                                <Button Content="Renommer" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
-                                <Button Content="Supprimer la table" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                <ItemsControl x:Name="TablesListBox" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,0,0,5" FontSize="22"/>
+                                    <Button Content="Ajouter un champ" Click="AddColumn_Click" Height="20" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                                    <Button Content="Renommer" Click="RenameTable_Click" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                                    <Button Content="Supprimer la table" Click="DeleteTable_Click" Height="20" Margin="10,0,10,0" Padding="3,1,3,1" FontSize="12" HorizontalAlignment="Right" Grid.Column="1"/>
+                                </StackPanel>
+
+                                <!-- Liste des colonnes de la table -->
+                                <ItemsControl ItemsSource="{Binding Columns}" Padding="3">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0">
+                                                <!-- Champ modifiable pour le nom de la colonne -->
+                                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+
+                                                <!-- Champ modifiable pour le type de données -->
+                                                <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                                                    <ComboBox.ItemsSource>
+                                                        <x:Array Type="{x:Type system:String}">
+                                                            <system:String>INTEGER</system:String>
+                                                            <system:String>TEXT</system:String>
+                                                            <system:String>REAL</system:String>
+                                                            <system:String>BLOB</system:String>
+                                                        </x:Array>
+                                                    </ComboBox.ItemsSource>
+                                                </ComboBox>
+                                                <Button Content="Supprimer le champ" Click="DeleteColumn_Click" Height="18" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="10"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Separator Margin="5,10,5,10"/>
                             </StackPanel>
-
-                            <!-- Liste des colonnes de la table -->
-                            <ItemsControl ItemsSource="{Binding Columns}" Padding="3">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Margin="0,0">
-                                            <!-- Champ modifiable pour le nom de la colonne -->
-                                            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-
-                                            <!-- Champ modifiable pour le type de données -->
-                                            <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="150">
-                                                <ComboBox.ItemsSource>
-                                                    <x:Array Type="{x:Type system:String}">
-                                                        <system:String>INTEGER</system:String>
-                                                        <system:String>TEXT</system:String>
-                                                        <system:String>REAL</system:String>
-                                                        <system:String>BLOB</system:String>
-                                                    </x:Array>
-                                                </ComboBox.ItemsSource>
-                                            </ComboBox>
-                                            <Button Content="Supprimer le champ" Click="DeleteColumn_Click" Height="18" Margin="15,0,10,0" Padding="3,1,3,1" FontSize="10"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <Separator Margin="5,10,5,10"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
 </Window>
