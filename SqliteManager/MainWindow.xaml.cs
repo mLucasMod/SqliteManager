@@ -10,8 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-//using System.Windows.Shapes;
-using System.IO;
+using System.Windows.Shapes;
 
 
 namespace SqliteManager
@@ -21,25 +20,44 @@ namespace SqliteManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Database db;
+        Manager manager = new Manager();
+        Browser browser = new Browser();
+
+        private Database database;
+        public Database db 
+        { 
+            get => database;
+            set 
+            {
+                database = value; 
+                manager.db = value;
+                browser.db = value;
+                manager.Refresh();
+                browser.Refresh();
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+            MainFrame.Content = manager;
+            SelectManagerButton.IsChecked = true;
         }
 
-        private void RefreshTables()
+        private void SelectManagerView_Click(object sender, RoutedEventArgs e)
         {
-            var tables = db.GetTables();
-            TablesListBox.ItemsSource = tables;
+            MainFrame.Content = manager;
+
+            SelectManagerButton.IsChecked = true;
+            SelectBrowserButton.IsChecked = false;
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void SelectBrowserView_Click(object sender, RoutedEventArgs e)
         {
-            if (db != null)
-            {
-                RefreshTables();
-            }
+            MainFrame.Content = browser;
+
+            SelectManagerButton.IsChecked = false;
+            SelectBrowserButton.IsChecked = true;
         }
 
         private void NewFile_Click(object sender, RoutedEventArgs e)
@@ -53,7 +71,6 @@ namespace SqliteManager
             if (saveFileDialog.ShowDialog() == true)
             {
                 db = new Database(saveFileDialog.FileName);
-                FileName.Content = Path.GetFileName(saveFileDialog.FileName);
             }
         }
 
@@ -68,8 +85,6 @@ namespace SqliteManager
             if (openFileDialog.ShowDialog() == true)
             {
                 db = new Database(openFileDialog.FileName);
-                FileName.Content = Path.GetFileName(openFileDialog.FileName);
-                RefreshTables();
             }
         }
 
@@ -83,93 +98,27 @@ namespace SqliteManager
             MessageBox.Show("Save As");
         }
 
-        private void DeleteFile_Click(Object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Delete Database");
-        }
-
         private void CloseApp_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-
-        private void AddTable_Click(object sender, RoutedEventArgs e)
+        private void CreateTable_Click(object sender, RoutedEventArgs e)
         {
             var inputWindow = new InputWindow();
+
+            if (db == null)
+            {
+                MessageBox.Show("No database selected", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             if (inputWindow.ShowDialog() == true)
             {
                 db.CreateTable(inputWindow.UserInput, new List<Column>());
+                manager.Refresh();
+                browser.Refresh();
             }
-
-            RefreshTables();
-        }
-
-        private void RenameTable_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Button)?.DataContext is Table table)
-            {
-                var inputWindow = new InputWindow();
-
-                if (inputWindow.ShowDialog() == true)
-                {
-                    db.RenameTable(table.Name, inputWindow.UserInput);
-                }
-            }
-
-            RefreshTables();
-        }
-
-        private void DeleteTable_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Button)?.DataContext is Table table)
-            {
-                db.DropTable(table.Name);
-            }
-
-            RefreshTables();
-        }
-
-
-        private void AddColumn_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Button)?.DataContext is Table table)
-            {
-                var inputWindow = new InputWindow();
-
-                if (inputWindow.ShowDialog() == true)
-                {
-                    db.AddColumn(table.Name, inputWindow.UserInput, Column.DataType.TEXT);
-                }
-            }
-
-            RefreshTables();
-        }
-
-        private void RenameColumn_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Button)?.DataContext is Column column)
-            {
-                var inputWindow = new InputWindow();
-
-                if (inputWindow.ShowDialog() == true)
-                {
-                    db.AddColumn(column.TableName, inputWindow.UserInput, Column.DataType.TEXT);
-                }
-            }
-
-            RefreshTables();
-        }
-
-        private void DeleteColumn_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Button)?.DataContext is Column column)
-            {
-                db.DeleteColumn(column.TableName, column.Name);
-            }
-
-            RefreshTables();
         }
     }
 }

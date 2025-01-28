@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SqliteManager
 {
-    class Column : INotifyPropertyChanged
+    public class Column : INotifyPropertyChanged
     {
         private string _name;
         private DataType _type;
@@ -36,11 +36,11 @@ namespace SqliteManager
 
         public enum DataType
         {
-            INTEGER,   // Entier signé (stocké sur 1, 2, 3, 4, 6 ou 8 octets)
-            REAL,      // Nombre à virgule flottante (stocké sur 8 octets)
-            TEXT,      // Chaîne de caractères (stockée en UTF-8, UTF-16)
-            BLOB,      // Donnée binaire brute
-            NULL       // Valeur nulle
+            INTEGER,
+            TEXT,
+            BLOB,
+            REAL,
+            NUMERIC
         }
 
         public Column(string tableName, string name, DataType type)

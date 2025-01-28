@@ -8,13 +8,18 @@ using System.Threading.Tasks;
 
 namespace SqliteManager
 {
-    class Database
+    public class Database
     {
         public Dictionary<string, Table> Tables { get; set; }
         private SqliteConnection connection;
 
+        public string Filepath { get; private set; }
+
+        public Database() { }
+
         public Database(string filepath)
         {
+            Filepath = filepath;
             connection = new SqliteConnection($"Data Source={filepath}");
             connection.Open();
         }
